@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,10 +13,12 @@ public class WindEmitter : MonoBehaviour {
     struct Particle {
         public float longitude;
         public float latitude;
+        public float age;
 
         public Particle (float longitude, float latitude) {
             this.longitude = longitude;
             this.latitude = latitude;
+            this.age = Random.Range(1f, 3f);
         }
     }
 
@@ -27,10 +28,10 @@ public class WindEmitter : MonoBehaviour {
         Data.LoadFiles();
 
         var main = system.main;
-        main.maxParticles = 94 * 192;
+        main.maxParticles = 10000000;
 
         particles2d = new WindEmitter.Particle[94 * 192];
-
+        
         InitialParticles();
         
     }
@@ -51,7 +52,7 @@ public class WindEmitter : MonoBehaviour {
             Vector2 position = new Vector2(rot * 180 / Mathf.PI, incline * 180 / Mathf.PI);
             WindEmitter.Particle particle = new WindEmitter.Particle(position.x, position.y);
 
-            particles2d[i] = particle;
+            // particles2d[i] = particle;
             PlotParticle(particle);
             UpdateParticle(ref particles2d[i]);
 
@@ -73,6 +74,22 @@ public class WindEmitter : MonoBehaviour {
 
     }
 
+    Vector3 Velocity (float lon, float lat) {
+
+        Vector2 wind = Data.GetWind(lon, lat);
+
+        Vector3 position = GetPosition3D(lon, lat);
+        Vector3 newPos = GetPosition3D(lon + wind.x, lat + wind.y);
+
+        return (newPos - position) * 0.001f;
+
+    }
+
+    void ClampToRadius (ref ParticleSystem.Particle particle) {
+        Vector3 clamped = particle.position.normalized * radius;
+        particle.position = clamped;
+    }
+
     void PlotParticle (WindEmitter.Particle particle) {
 
         ParticleSystem.EmitParams emission = new ParticleSystem.EmitParams();
@@ -81,6 +98,7 @@ public class WindEmitter : MonoBehaviour {
 
         if (plotSphere) {
             emission.position = position3;
+            // emission.velocity = Velocity(particle.longitude, particle.latitude);
         }
         else {
             emission.position = new Vector3(particle.longitude/18.0f - 10, particle.latitude/18.0f - 5, 0);
@@ -90,31 +108,39 @@ public class WindEmitter : MonoBehaviour {
 
     }
 
-    void UpdateParticle (ref WindEmitter.Particle particle2d) {
+    void UpdateParticle (ref WindEmitter.Particle particle) {
 
-        Vector2 wind = Data.GetWind(particle2d.longitude, particle2d.latitude) / 50;
+        Vector2 wind = Data.GetWind(particle.longitude, particle.latitude) / 10f;
 
-        particle2d.longitude += wind.x;
-        particle2d.latitude += wind.y;
+        particle.longitude += wind.x;
+        particle.latitude += wind.y;
 
-        if (particle2d.longitude < 0) {
-            particle2d.longitude = 360 + particle2d.longitude % -360;
-        } else if (particle2d.longitude > 360) {
-            particle2d.longitude %= 360;
+        if (particle.longitude < 0) {
+            particle.longitude = 360 + particle.longitude % -360;
+        } else if (particle.longitude >= 360) {
+            particle.longitude %= 360;
         }
 
-        if (particle2d.latitude < 0) {
-            particle2d.latitude = 180 + particle2d.latitude % -180;
-        } else if (particle2d.latitude > 180) {
-            particle2d.latitude %= 180;
+        if (particle.latitude < 0) {
+            particle.latitude = 180 + particle.latitude % -180;
+        } else if (particle.latitude >= 180) {
+            particle.latitude %= 180;
+        }
+
+        particle.age -= 0.01f;
+
+        if (particle.age < 0) {
+            particle.longitude = Random.Range(0f, 359f);
+            particle.latitude = Random.Range(0f, 179);
+            particle.age = Random.Range(1f, 3f);
         }
 
     }
 
     Vector3 GetPosition3D (float longitude, float latitude) {
 
-        float lonRadian = longitude * Mathf.PI / 180.0f;
-        float latRadian = latitude  * Mathf.PI / 180.0f;
+        float lonRadian = (longitude - 180) * Mathf.PI / 180.0f;
+        float latRadian = (latitude - 180)  * Mathf.PI / 180.0f;
 
         // float x = Mathf.Sin(lonRadian) * Mathf.Cos(latRadian);
         // float y = Mathf.Sin(lonRadian) * Mathf.Sin(latRadian);

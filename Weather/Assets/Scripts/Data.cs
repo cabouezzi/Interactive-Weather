@@ -34,13 +34,13 @@ public class Data {
 
         return new Vector2(u[y, x], v[y, x]);
 
-        int i = Mathf.Min(Mathf.Max((int) (-0.52503335f*latitude + 46.5f), 0), 93);
+        int i = Mathf.Min(Mathf.Max((int) (0.52503335f*latitude), 0), 93);
         int j = Mathf.Min(Mathf.Max((int) (0.5333333333f*longitude), 0), 191);
 
         int I = Mathf.Min(i + 1, 93);
         int J = Mathf.Min(j + 1, 191);
 
-        float a = (-0.52503335f*latitude + 0.5f) % 1f;
+        float a = (0.52503335f*latitude) % 1f;
         float b = (0.5333333333f*longitude) % 1f;
 
         return Lerp(
