@@ -5,13 +5,13 @@
  public class Orbit : MonoBehaviour
  {
      public Transform target;
-     public float distance = 5.0f;
-     public float xSpeed = 120.0f;
-     public float ySpeed = 120.0f;
-     public float yMinLimit = -20f;
+     public float distance = 14.0f;
+     public float xSpeed = 10.0f;
+     public float ySpeed = 40.0f;
+     public float yMinLimit = -80f;
      public float yMaxLimit = 80f;
-     public float distanceMin = .5f;
-     public float distanceMax = 15f;
+     public float distanceMin = 6f;
+     public float distanceMax = 18f;
      public float smoothTime = 2f;
      float rotationYAxis = 0.0f;
      float rotationXAxis = 0.0f;
