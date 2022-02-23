@@ -1,0 +1,24 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSParticle
+
+struct Particle {
+    float3 position;
+    float3 velocity;
+};
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWStructuredBuffer<Particle> particleBuffer;
+
+float deltaTime;
+
+[numthreads(8, 1, 1)]
+void CSParticle (uint3 id : SV_DispatchThreadID) {
+
+    Particle particle = particleBuffer[id.x];
+    
+    particle.position.x += particle.velocity.x * deltaTime;
+    particle.position.y += particle.velocity.y * deltaTime;
+    particle.position.z += particle.velocity.y * deltaTime;
+
+}

@@ -1,0 +1,26 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+
+float Resolution;
+
+RWStructuredBuffer<float2> vectors;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+
+    // TODO: insert actual code here!
+    float x = floor(id.x * 192 / 720.0 + 0.5);
+    float y = floor((360.0 - id.y) * 94 / 360.0 + 0.5);
+
+    
+    // float value = ComputeShaderTest.u[id.x, id.y];
+    float2 value = vectors[192 * y + x];
+    float mag = sqrt(value.x*value.x + value.y*value.y) / 25;
+
+    Result[id.xy] = float4(value.x, 0, value.y, mag);
+
+}
