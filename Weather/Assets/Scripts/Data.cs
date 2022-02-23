@@ -23,9 +23,11 @@ public class Data {
         v = (float[,]) formatter.Deserialize(file);
         file.Close();
 
+        /*
         file = new FileStream("Assets/Data/temp.dat", FileMode.Open);
         temp = (float[,]) formatter.Deserialize(file);
         file.Close();
+        */
     }
 
     public static Vector2 GetWind(float longitude, float latitude) {
@@ -57,15 +59,17 @@ public class Data {
         */
     }
 
+    /*
     public static float GetTemp(float longitude, float latitude) {
         int x = FloorToInt((longitude % 360) / 1.875f);
         int y = FloorToInt((latitude % 180) * 94.0f / 180.0f);
 
-        x = Min(TEMPERATURE_COLS - 1, Max(0, x));
-        y = Min(TEMPERATURE_ROWS - 1, Max(0, y));
+        x = Min( SOMETHING , Max(0, x));
+        y = Min( SOMETHING , Max(0, y));
 
         return temp[x, y];
     }
+    */
 
     static Vector2 Lerp(float u1, float v1, float w1,
                         float u2, float v2, float w2,
