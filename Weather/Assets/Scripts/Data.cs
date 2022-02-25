@@ -23,11 +23,17 @@ public class Data {
         v = (float[,]) formatter.Deserialize(file);
         file.Close();
 
-        /*
-        file = new FileStream("Assets/Data/temp.dat", FileMode.Open);
+        file = new FileStream("Assets/Data/t.dat", FileMode.Open);
         temp = (float[,]) formatter.Deserialize(file);
         file.Close();
-        */
+        // normalize temps
+        for(int i = 0; i < 90; i++) {
+            for(int j = 0; j < 180; j++) {
+                float normalize = (temp[i, j] + 0.9539546567925773f)/2.3242494283278154f;
+                float smoothstep = 3*Mathf.Pow(normalize, 2) - 2*Mathf.Pow(normalize, 3);
+                temp[i, j] = smoothstep;
+            }
+        }
     }
 
     public static Vector2 GetWind(float longitude, float latitude) {
@@ -59,17 +65,16 @@ public class Data {
         */
     }
 
-    /*
+    
     public static float GetTemp(float longitude, float latitude) {
-        int x = FloorToInt((longitude % 360) / 1.875f);
-        int y = FloorToInt((latitude % 180) * 94.0f / 180.0f);
+        int x = FloorToInt((longitude % 360) / 2f);
+        int y = FloorToInt((latitude % 180) / 2f);
 
-        x = Min( SOMETHING , Max(0, x));
-        y = Min( SOMETHING , Max(0, y));
+        x = Min( 179 , Max(0, x));
+        y = Min( 89 , Max(0, y));
 
-        return temp[x, y];
+        return temp[y, x];
     }
-    */
 
     static Vector2 Lerp(float u1, float v1, float w1,
                         float u2, float v2, float w2,

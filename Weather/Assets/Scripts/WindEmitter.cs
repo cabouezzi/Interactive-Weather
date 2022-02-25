@@ -121,11 +121,13 @@ public class WindEmitter : MonoBehaviour {
 
         Vector3 position = GetPosition3D(longitude, latitude);
         Vector3 velocity = GetVelocity(position);
+        Color32 color = GetColor(longitude, latitude);
 
         emission.position = position;
         emission.velocity = velocity;
         if (system != kiteSystem) {
             emission.startLifetime = Random.Range(minLife, maxLife);
+            emission.startColor = color;
         }
 
         system.Emit(emission, 1);
@@ -217,4 +219,8 @@ public class WindEmitter : MonoBehaviour {
 
     }
 
+    Color32 GetColor(float longitude, float latitude) {
+        float temp = Data.GetTemp(longitude, latitude);
+        return Color.HSVToRGB(.66f*temp, 1, 1);
+    }
 }
