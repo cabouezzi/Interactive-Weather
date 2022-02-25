@@ -24,7 +24,7 @@ public class WindEmitter : MonoBehaviour {
         Data.LoadFiles();
 
         var wmain = windSystem.main;
-        wmain.maxParticles = 10000000;
+        wmain.maxParticles = numberOfParticles;
         wmain.loop = true;
 
         var kmain = kiteSystem.main;
