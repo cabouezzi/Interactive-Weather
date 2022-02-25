@@ -30,6 +30,7 @@
              GetComponent<Rigidbody>().freezeRotation = true;
          }
      }
+
      void LateUpdate()
      {
          if (target)
