@@ -17,6 +17,8 @@
      float rotationXAxis = 0.0f;
      float velocityX = 0.0f;
      float velocityY = 0.0f;
+
+     float timeInactive = 0;
      
      // Use this for initialization
      void Start()
@@ -31,15 +33,21 @@
          }
      }
 
-     void LateUpdate()
+     void Update()
      {
+
          if (target)
          {
+
+             AutoRotate();
+             timeInactive += Time.deltaTime;
              if (Input.GetMouseButton(0))
              {
+                 timeInactive = 0;
                  velocityX += xSpeed * Input.GetAxis("Mouse X") * distance * 0.02f;
                  velocityY += ySpeed * Input.GetAxis("Mouse Y") * 0.02f;
              }
+
              rotationYAxis += velocityX;
              rotationXAxis -= velocityY;
              rotationXAxis = ClampAngle(rotationXAxis, yMinLimit, yMaxLimit);
@@ -70,4 +78,14 @@
              angle -= 360F;
          return Mathf.Clamp(angle, min, max);
      }
+     
+    
+    void AutoRotate () {
+
+        if (timeInactive > 10) {
+            velocityX = 0.05f;
+        }
+
+    }
+
  }

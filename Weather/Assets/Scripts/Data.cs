@@ -26,6 +26,7 @@ public class Data {
         file = new FileStream("Assets/Data/t.dat", FileMode.Open);
         temp = (float[,]) formatter.Deserialize(file);
         file.Close();
+
         // normalize temps
         for(int i = 0; i < 90; i++) {
             for(int j = 0; j < 180; j++) {
@@ -34,6 +35,7 @@ public class Data {
                 temp[i, j] = smoothstep;
             }
         }
+        
     }
 
     public static Vector2 GetWind(float longitude, float latitude) {
