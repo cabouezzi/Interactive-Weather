@@ -77,9 +77,10 @@ public class WindEmitter : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             touchPosition = Input.mousePosition;
         } else if (Input.GetMouseButtonUp(0)) {
+
             Vector3 drag = touchPosition - Input.mousePosition;
-            if(drag.magnitude > maxKiteDrag)
-                return;
+
+            if (drag.magnitude > maxKiteDrag) return;
 
             Ray raycast = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit raycastHit;
@@ -200,24 +201,15 @@ public class WindEmitter : MonoBehaviour {
 
     Vector2 GetPosition2D (Vector3 position) {
 
-        Vector3 clamped = position.normalized * radius;
-        float x = clamped.x;
-        float y = clamped.y;
-        float z = clamped.z;
+        float x = position.normalized.x;
+        float y = position.normalized.y;
+        float z = position.normalized.z;
 
         // arccos 0 to 180
-        float latitude = Mathf.Asin(y / radius) * 180f / Mathf.PI;
+        float latitude = Mathf.Asin(y) * 180f / Mathf.PI;
 
         // arctan ranges -90 to 90
-        float longitude = z == 0 ? 0 : Mathf.Atan(x / z) * 180f / Mathf.PI;
-
-        // Adjust for quadrant
-        if (x < 0 && z < 0) {
-            longitude += 180f;
-        }
-        else if (x > 0 && z < 0) {
-            longitude += 180f;
-        }
+        float longitude = Mathf.Atan2(x, z) * 180f / Mathf.PI;
 
         latitude += 90;
         longitude += 180;
