@@ -18,6 +18,9 @@ public class WindEmitter : MonoBehaviour {
     public float maxLife;
     public float velocityFactor;
 
+    public float maxKiteDrag = 10;
+    Vector3 touchPosition;
+
     // Start is called before the first frame update
     void Start() {
 
@@ -72,6 +75,11 @@ public class WindEmitter : MonoBehaviour {
     void TouchHandler () {
 
         if (Input.GetMouseButtonDown(0)) {
+            touchPosition = Input.mousePosition;
+        } else if (Input.GetMouseButtonUp(0)) {
+            Vector3 drag = touchPosition - Input.mousePosition;
+            if(drag.magnitude > maxKiteDrag)
+                return;
 
             Ray raycast = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit raycastHit;
@@ -85,7 +93,6 @@ public class WindEmitter : MonoBehaviour {
                 }
 
             }
-
         }
 
     }
