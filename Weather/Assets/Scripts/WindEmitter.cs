@@ -39,9 +39,14 @@ public class WindEmitter : MonoBehaviour {
 
         SphereCollider collider = GetComponent<SphereCollider>();
         collider.radius = radius;
+
+        ResetWindParticles();
         
+    }
+
+    public void ResetWindParticles () {
+        windSystem.Clear();
         PlotSphere(numberOfParticles);
-        
     }
 
     void PlotSphere (float n) {

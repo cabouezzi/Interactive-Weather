@@ -65,7 +65,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - PixelSnap: 0
-    - _Alpha: 0.2
+    - _Alpha: 0.3
     - _BlendOp: 0
     - _BumpScale: 1
     - _CameraFadingEnabled: 0
