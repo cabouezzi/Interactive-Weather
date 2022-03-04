@@ -88,9 +88,13 @@ public class WindEmitter : MonoBehaviour {
             if (Physics.Raycast(raycast, out raycastHit)) {
 
                 if (raycastHit.collider.CompareTag("Wind")) {
-                    Debug.Log("Tapped");
-                    Vector2 geo = GetPosition2D(raycastHit.point);
+
+                    Vector3 hit = raycastHit.point;
+                    hit.x *= -1;
+
+                    Vector2 geo = GetPosition2D(hit);
                     PlotParticle(geo.x, geo.y, ref kiteSystem);
+                    
                 }
 
             }
@@ -108,16 +112,16 @@ public class WindEmitter : MonoBehaviour {
         float newX = (geo.x + wind.x * velocityFactor) % 360f;
         float newY = (geo.y  + wind.y * velocityFactor);
 
-        if (newY < 0) {
+        if (newY <= 0) {
             newX += 180;
             newY = Mathf.Abs(newY);
         }
-        else if (newY > 180) {
+        else if (newY >= 180) {
             newX += 180;
             newY = 360 - newY;
         }
 
-        Vector3 newPos3 = GetPosition3D(newX, newY);
+        Vector3 newPos3 = GetPosition3D(newX % 360, newY % 180);
 
         return (newPos3 - position3);
 
@@ -188,8 +192,8 @@ public class WindEmitter : MonoBehaviour {
 
     Vector3 GetPosition3D (float longitude, float latitude) {
 
-        float lonRadian = (longitude % 360 - 180) * Mathf.PI / 180f;
-        float latRadian = (latitude % 180 - 90) * Mathf.PI / 180f;
+        float lonRadian = ((longitude + 360) % 360 - 180) * Mathf.PI / 180f;
+        float latRadian = ((latitude + 180) % 180 - 90) * Mathf.PI / 180f;
 
         float x = radius * Mathf.Cos(latRadian) * Mathf.Sin(lonRadian);
         float y = radius * Mathf.Sin(latRadian);
@@ -205,10 +209,10 @@ public class WindEmitter : MonoBehaviour {
         float y = position.normalized.y;
         float z = position.normalized.z;
 
-        // arccos 0 to 180
+        // arcsin -90 to 90
         float latitude = Mathf.Asin(y) * 180f / Mathf.PI;
 
-        // arctan ranges -90 to 90
+        // arctan ranges -180 to 180
         float longitude = Mathf.Atan2(x, z) * 180f / Mathf.PI;
 
         latitude += 90;
@@ -222,4 +226,5 @@ public class WindEmitter : MonoBehaviour {
         float temp = Data.GetTemp(longitude, latitude);
         return Color.HSVToRGB(.66f*temp, 1, 1);
     }
+
 }

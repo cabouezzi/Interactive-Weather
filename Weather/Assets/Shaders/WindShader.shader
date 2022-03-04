@@ -2,7 +2,7 @@ Shader "WindShader"
  {
     Properties
     {
-        [PerRendererData] _MainTex ("Base (RGB)", 2D) = "white" {}
+        _MainTex ("Base (RGB)", 2D) = "white" {}
         _Alpha ("Alpha", Range(0, 1)) = 1
         [MaterialToggle] _Emission ("Emits", Float) = 0
     }

@@ -5,9 +5,10 @@
  public class Orbit : MonoBehaviour
  {
      public Transform target;
-     public float distance = 14.0f;
-     public float xSpeed = 10.0f;
-     public float ySpeed = 60.0f;
+     public float distance = 10.0f;
+     public float xSpeed = 5.0f;
+     public float ySpeed = 30.0f;
+     public float zoomSpeed = 0.05f;
      public float yMinLimit = -80f;
      public float yMaxLimit = 80f;
      public float distanceMin = 6f;
@@ -23,6 +24,10 @@
      // Use this for initialization
      void Start()
      {
+
+        Cursor.visible = false;
+        mousePosition = Input.mousePosition;
+        
          Vector3 angles = transform.eulerAngles;
          rotationYAxis = angles.y;
          rotationXAxis = angles.x;
@@ -33,6 +38,8 @@
          }
      }
 
+     Vector3 mousePosition;
+
      void Update()
      {
 
@@ -41,11 +48,16 @@
 
              AutoRotate();
              timeInactive += Time.deltaTime;
-             if (Input.GetMouseButton(0))
+             if (Input.GetMouseButton(0) && !Input.GetMouseButtonDown(0))
              {
+                 Vector3 dm = Input.mousePosition - mousePosition;
+
                  timeInactive = 0;
-                 velocityX += xSpeed * Input.GetAxis("Mouse X") * distance * 0.02f;
-                 velocityY += ySpeed * Input.GetAxis("Mouse Y") * 0.02f;
+                 velocityX += xSpeed * dm.x * distance * 0.02f;
+                 velocityY += ySpeed * dm.y * 0.02f;
+             }
+             if (Input.GetMouseButtonUp(0)) {
+
              }
 
              rotationYAxis += velocityX;
@@ -55,7 +67,7 @@
              Quaternion toRotation = Quaternion.Euler(rotationXAxis, rotationYAxis, 0);
              Quaternion rotation = toRotation;
              
-             distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * 5, distanceMin, distanceMax);
+             distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * zoomSpeed, distanceMin, distanceMax);
              RaycastHit hit;
              if (Physics.Linecast(target.position, transform.position, out hit))
              {
@@ -69,6 +81,9 @@
              velocityX = Mathf.Lerp(velocityX, 0, Time.deltaTime * smoothTime);
              velocityY = Mathf.Lerp(velocityY, 0, Time.deltaTime * smoothTime);
          }
+
+        mousePosition = Input.mousePosition;
+
      }
      public static float ClampAngle(float angle, float min, float max)
      {

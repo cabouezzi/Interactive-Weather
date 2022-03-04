@@ -30,7 +30,7 @@ public class Data {
         // normalize temps
         for(int i = 0; i < 90; i++) {
             for(int j = 0; j < 180; j++) {
-                float normalize = (temp[i, j] + 0.9539546567925773f)/2.3242494283278154f;
+                float normalize = (temp[i, j] + 0.9539546567925773f) / 2.3242494283278154f;
                 float smoothstep = 3*Mathf.Pow(normalize, 2) - 2*Mathf.Pow(normalize, 3);
                 temp[i, j] = smoothstep;
             }
@@ -41,7 +41,7 @@ public class Data {
     public static Vector2 GetWind(float longitude, float latitude) {
 
         int x = FloorToInt((longitude % 360) / 1.875f);
-        int y = FloorToInt((latitude % 180) * 94.0f / 180.0f);
+        int y = FloorToInt((180 - latitude % 180) * 94.0f / 180.0f);
 
         x = Min(191, Max(0, x));
         y = Min(93,  Max(0, y));
@@ -69,6 +69,7 @@ public class Data {
 
     
     public static float GetTemp(float longitude, float latitude) {
+
         int x = FloorToInt((longitude % 360) / 2f);
         int y = FloorToInt((latitude % 180) / 2f);
 
@@ -76,15 +77,18 @@ public class Data {
         y = Min( 89 , Max(0, y));
 
         return temp[y, x];
+
     }
 
     static Vector2 Lerp(float u1, float v1, float w1,
                         float u2, float v2, float w2,
                         float u3, float v3, float w3,
                         float u4, float v4, float w4) {
+
         return new Vector2(
             u1*w1 + u2*w2 + u3*w3 + u4*w4,
             v1*w1 + v2*w2 + v3*w3 + v4*w4
         );
+        
     }
 }
