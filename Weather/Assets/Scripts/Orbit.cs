@@ -25,7 +25,7 @@
      void Start()
      {
 
-        Cursor.visible = false;
+        Cursor.visible = true;
         mousePosition = Input.mousePosition;
         
          Vector3 angles = transform.eulerAngles;
